@@ -1,0 +1,19 @@
+{
+	"dot_size":0.08,
+	"dot_density":16.7,
+	"coherence":[0, 0.06, 0.12, 0.24, 0.48],
+	"dotsize_deg": 0.2,
+	"fieldsize_deg": 24,
+	"speed": 12,
+	"size_fixation_deg":1.5,
+
+	"fixation_time":0.5,
+	"stimulus_time":2.0,
+	"feedback_time":0.5,
+
+	"n_trials":100,
+	"n_blocks":3,
+
+	"left_key":"z",
+	"right_key":"m"
+}
