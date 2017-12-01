@@ -3,9 +3,10 @@
 	"dot_density":16.7,
 	"coherence":[0, 0.06, 0.12, 0.24, 0.48],
 	"dotsize_deg": 0.2,
-	"fieldsize_deg": 24,
+	"fieldsize_deg": 10,
 	"speed": 12,
-	"size_fixation_deg":1.5,
+	"size_aperture_degree":1.5,
+	"size_fixation_cross_degree":1.0,
 
 	"fixation_time":0.5,
 	"stimulus_time":2.0,

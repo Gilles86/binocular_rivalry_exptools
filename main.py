@@ -2,7 +2,7 @@ from session import CalibrateSession
 import appnope
 
 def main():
-    #initials = raw_input('Your initials: ')
+    initials = raw_input('Your initials: ')
     #run_nr = int(raw_input('Run number: '))
     #scanner = raw_input('Are you in the scanner (y/n)?: ')
     #track_eyes = raw_input('Are you recording gaze (y/n)?: ')
@@ -11,11 +11,11 @@ def main():
     #elif track_eyes == 'n':
         #tracker_on = False
         
-    initials = 'GdH'
+    #initials = 'GdH'
     run = 1
     appnope.nope()
 
-    ts = CalibrateSession( initials, run)
+    ts = CalibrateSession( initials, run, simulate_mri_trigger=False)
     ts.run()
 
     # plot_mapper_staircase(initials, run_nr)
