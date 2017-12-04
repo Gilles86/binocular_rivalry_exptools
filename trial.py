@@ -7,7 +7,7 @@ import numpy as np
 from stimulus import create_stimulus, RDMStimulus
 from exptools import config
 
-class WaitTrial(MRITrial):
+class WaitTrial(Trial):
 
     def __init__(self, text=None, wait_key=None, *args, **kwargs):
         super(WaitTrial, self).__init__(phase_durations=[10000], *args, **kwargs)
@@ -15,6 +15,7 @@ class WaitTrial(MRITrial):
         self.text = visual.TextStim(self.screen, text=text, color='white', height=50, wrapWidth=500)
 
         self.wait_key = wait_key
+        self.session.quit = False
 
     def draw(self):
         self.text.draw()
@@ -31,13 +32,12 @@ class WaitTrial(MRITrial):
         if key == 'q':
             self.stop()
             self.session.stop()
+            self.session.quit = True
 
-class MRITriggerWaitTrial(WaitTrial):
+class MRITriggerWaitTrial(WaitTrial, MRITrial):
 
     def __init__(self, *args, **kwargs):
         super(MRITriggerWaitTrial, self).__init__(*args, wait_key=config.get('mri', 'mri_trigger_key'), **kwargs)
-
-
 
 
 class CalibrateTrial(Trial):
@@ -50,7 +50,7 @@ class CalibrateTrial(Trial):
                                              phase_durations=phase_durations,
                                              *args, 
                                              **kwargs)
-        self.n_frames_per_stimulus =  self.session.frame_rate / self.parameters['frequency']
+        self.n_frames_per_stimulus =  int(self.session.frame_rate / self.parameters['frequency'])
 
         self.make_stimuli()
         size_fixation_pix = self.session.deg2pix(self.parameters['size_aperture_degree'])
@@ -72,7 +72,7 @@ class CalibrateTrial(Trial):
                                                color='white')
 
 
-        self.ID = 'Calibrate_red_blue_%d' % trial_idx
+        self.ID = trial_idx
         self.t = 0
 
 
@@ -104,7 +104,7 @@ class CalibrateTrial(Trial):
         if self.phase == 0:
             self.fixation_cross.draw()
         if self.phase == 1:
-            self.stimuli[self.t / self.n_frames_per_stimulus % (len(self.stimuli))].draw()
+            self.stimuli[self.t / self.n_frames_per_stimulus % len(self.stimuli)].draw()
             self.t += 1
             self.aperture.draw()
             self.fixation_cross.draw()
@@ -199,7 +199,7 @@ class RDMTrial(MRITrial):
         fieldArea = (fieldSize/2)**2 * np.pi
         nDots = int(fieldArea * dotDensity)
 
-        speed = self.session.deg2pix(self.parameters['speed']) / self.session.refresh_rate
+        speed = self.session.deg2pix(self.parameters['speed']) / self.session.frame_rate
 
         dotSize = np.max([int(self.session.deg2pix(self.parameters['dot_size'])), 1])
 
@@ -235,7 +235,7 @@ class RDMTrial(MRITrial):
         self.fixation_cross = visual.TextStim(self.screen, 
                                               '+',
                                                height=size_fixation_cross_pix,
-                                               color=self.parameters['color'])
+                                               color=self.session.color12)
 
 
 
@@ -419,7 +419,7 @@ class RDMCalibrateTrial(Trial):
         fieldArea = (fieldSize/2)**2 * np.pi
         nDots = int(fieldArea * dotDensity)
 
-        speed = self.session.deg2pix(self.parameters['speed']) / self.session.refresh_rate
+        speed = self.session.deg2pix(self.parameters['speed']) / self.session.frame_rate
 
         dotSize = np.max([int(self.session.deg2pix(self.parameters['dot_size'])), 1])
 
